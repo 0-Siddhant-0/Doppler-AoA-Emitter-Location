@@ -90,7 +90,7 @@ The combined estimator minimizes the weighted sum of squared residuals:
 
 where:
 - $\mathbf{C}_f = \sigma_f^2 \mathbf{I}$ is the Doppler measurement covariance matrix
-- $\mathbf{C}_\phi = \sigma_\phi^2 \mathbf{I}$ is the AoA measurement covariance matrix
+- - ![C_phi](https://latex.codecogs.com/png.latex?\mathbf{C}_\phi%20=%20\sigma_\phi^2%20\mathbf{I}) is the AoA measurement covariance matrix
 
 This is solved iteratively using the Gauss-Newton method:
 
@@ -103,24 +103,15 @@ where the update step $\delta \mathbf{x}_k$ is:
 with:
 * The combined Jacobian matrix:
   
-  $$\mathbf{H}_{combined} = \begin{bmatrix} 
-  \mathbf{H}_{Dop} \\
-  \mathbf{H}_{AoA}
-  \end{bmatrix}$$
+  ![H_combined](https://latex.codecogs.com/png.latex?\mathbf{H}_{combined}%20=%20\begin{bmatrix}%20\mathbf{H}_{Dop}%20\\%20\mathbf{H}_{AoA}%20\end{bmatrix})
 
 * The block-diagonal combined covariance:
   
-  $$\mathbf{C}_{combined} = \begin{bmatrix} 
-  \mathbf{C}_f & \mathbf{0} \\
-  \mathbf{0} & \mathbf{C}_\phi
-  \end{bmatrix}$$
+  ![C_combined](https://latex.codecogs.com/png.latex?\mathbf{C}_{combined}%20=%20\begin{bmatrix}%20\mathbf{C}_f%20&%20\mathbf{0}%20\\%20\mathbf{0}%20&%20\mathbf{C}_\phi%20\end{bmatrix})
 
 * The residual vector:
   
-  $$\mathbf{r}_{combined} = \begin{bmatrix}
-  \tilde{\mathbf{f}} - \mathbf{f}(\mathbf{x}_k) \\
-  \tilde{\boldsymbol{\phi}} - \boldsymbol{\phi}(\mathbf{x}_k)
-  \end{bmatrix}$$
+  ![r_combined](https://latex.codecogs.com/png.latex?\mathbf{r}_{combined}%20=%20\begin{bmatrix}%20\tilde{\mathbf{f}}%20-%20\mathbf{f}(\mathbf{x}_k)%20\\%20\tilde{\boldsymbol{\phi}}%20-%20\boldsymbol{\phi}(\mathbf{x}_k)%20\end{bmatrix})
   
 - $\lambda$ is the regularization parameter for numerical stability
 
