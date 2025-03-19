@@ -84,10 +84,12 @@ with:
 
 ## Combined Nonlinear Least Squares Estimator
 
-<!-- -->
 The combined estimator minimizes the weighted sum of squared residuals:
 
-$$\hat{\mathbf{x}} = \arg\min_{\mathbf{x}} \left[ (\tilde{\mathbf{f}} - \mathbf{f}(\mathbf{x}))^T \mathbf{C}_f^{-1} (\tilde{\mathbf{f}} - \mathbf{f}(\mathbf{x})) + (\tilde{\boldsymbol{\phi}} - \boldsymbol{\phi}(\mathbf{x}))^T \mathbf{C}_\phi^{-1} (\tilde{\boldsymbol{\phi}} - \boldsymbol{\phi}(\mathbf{x})) \right]$$
+<!-- -->
+$$
+\hat{\mathbf{x}} = \arg\min_{\mathbf{x}} \left[ (\tilde{\mathbf{f}} - \mathbf{f}(\mathbf{x}))^T \mathbf{C}_f^{-1} (\tilde{\mathbf{f}} - \mathbf{f}(\mathbf{x})) + (\tilde{\boldsymbol{\phi}} - \boldsymbol{\phi}(\mathbf{x}))^T \mathbf{C}_\phi^{-1} (\tilde{\boldsymbol{\phi}} - \boldsymbol{\phi}(\mathbf{x})) \right]
+$$
 
 where:
 - $\mathbf{C}_f = \sigma_f^2 \mathbf{I}$ is the Doppler measurement covariance matrix
@@ -97,14 +99,35 @@ This is solved iteratively using the Gauss-Newton method:
 
 $$\mathbf{x}_{k+1} = \mathbf{x}_k + \delta \mathbf{x}_k$$
 
-where:
+where the update step $\delta \mathbf{x}_k$ is:
 
-$$\delta \mathbf{x}_k = \left( \mathbf{H}_{combined}^T \mathbf{C}_{combined}^{-1} \mathbf{H}_{combined} + \lambda \mathbf{I} \right)^{-1} \mathbf{H}_{combined}^T \mathbf{C}_{combined}^{-1} \mathbf{r}_{combined}$$
+<!-- -->
+$$
+\delta \mathbf{x}_k = \left( \mathbf{H}_{combined}^T \mathbf{C}_{combined}^{-1} \mathbf{H}_{combined} + \lambda \mathbf{I} \right)^{-1} \mathbf{H}_{combined}^T \mathbf{C}_{combined}^{-1} \mathbf{r}_{combined}
+$$
 
 with:
-- $\mathbf{H}_{combined} = \begin{bmatrix} \mathbf{H}_{Dop} \\ \mathbf{H}_{AoA} \end{bmatrix}$ is the combined Jacobian matrix
-- $\mathbf{C}_{combined} = \begin{bmatrix} \mathbf{C}_f & \mathbf{0} \\ \mathbf{0} & \mathbf{C}_\phi \end{bmatrix}$ is the block-diagonal combined covariance
-- $\mathbf{r}_{combined} = \begin{bmatrix} \tilde{\mathbf{f}} - \mathbf{f}(\mathbf{x}_k) \\ \tilde{\boldsymbol{\phi}} - \boldsymbol{\phi}(\mathbf{x}_k) \end{bmatrix}$ is the residual vector
+- The combined Jacobian matrix:
+  
+  <!-- -->
+  $$
+  \mathbf{H}_{combined} = \begin{bmatrix} \mathbf{H}_{Dop} \\ \mathbf{H}_{AoA} \end{bmatrix}
+  $$
+
+- The block-diagonal combined covariance:
+  
+  <!-- -->
+  $$
+  \mathbf{C}_{combined} = \begin{bmatrix} \mathbf{C}_f & \mathbf{0} \\ \mathbf{0} & \mathbf{C}_\phi \end{bmatrix}
+  $$
+
+- The residual vector:
+  
+  <!-- -->
+  $$
+  \mathbf{r}_{combined} = \begin{bmatrix} \tilde{\mathbf{f}} - \mathbf{f}(\mathbf{x}_k) \\ \tilde{\boldsymbol{\phi}} - \boldsymbol{\phi}(\mathbf{x}_k) \end{bmatrix}
+  $$
+
 - $\lambda$ is the regularization parameter for numerical stability
 
 ## Cramer-Rao Lower Bound (CRLB) Analysis
@@ -125,7 +148,10 @@ $$\mathbf{J}_{AoA} = \frac{1}{\sigma_\phi^2} \mathbf{H}_{AoA}^T \mathbf{H}_{AoA}
 
 ### Combined FIM
 
-$$\mathbf{J}_{combined} = \mathbf{H}_{combined}^T \mathbf{C}_{combined}^{-1} \mathbf{H}_{combined}$$
+<!-- -->
+$$
+\mathbf{J}_{combined} = \mathbf{H}_{combined}^T \mathbf{C}_{combined}^{-1} \mathbf{H}_{combined}
+$$
 
 The CRLB trace is used as a scalar measure of estimation uncertainty:
 
@@ -148,7 +174,9 @@ where:
 The platform velocities are computed as:
 
 $$v_x = v_{horiz} \cdot \cos(\theta(t))$$
+
 $$v_y = -v_{horiz} \cdot \sin(\theta(t))$$
+
 $$v_z = v_z + a_z \cdot \Delta t$$
 
 where $a_z$ alternates between positive and negative values to create vertical oscillation.
@@ -158,13 +186,17 @@ where $a_z$ alternates between positive and negative values to create vertical o
 The Monte Carlo simulation generates multiple realizations of noisy measurements and applies the estimator to each:
 
 $$\tilde{f}_i(t_j) = f(t_j, \mathbf{x}) + \nu_i(t_j), \quad \nu_i(t_j) \sim \mathcal{N}(0, \sigma_f^2)$$
+
 $$\tilde{\phi}_i(t_j) = \phi(t_j, \mathbf{x}) + w_{\phi,i}(t_j), \quad w_{\phi,i}(t_j) \sim \mathcal{N}(0, \sigma_\phi^2)$$
 
 The RMS error is calculated as:
 
 $$\text{RMS}_x = \sqrt{\frac{1}{N_{MC}} \sum_{i=1}^{N_{MC}} (X_i - X_{true})^2}$$
+
 $$\text{RMS}_y = \sqrt{\frac{1}{N_{MC}} \sum_{i=1}^{N_{MC}} (Y_i - Y_{true})^2}$$
+
 $$\text{RMS}_z = \sqrt{\frac{1}{N_{MC}} \sum_{i=1}^{N_{MC}} (Z_i - Z_{true})^2}$$
+
 $$\text{RMS}_{3D} = \sqrt{\text{RMS}_x^2 + \text{RMS}_y^2 + \text{RMS}_z^2}$$
 
 ## Improvement Ratio Calculation
@@ -176,6 +208,7 @@ $$R_{Dop} = \frac{\text{trace}(\mathbf{C}_{CRLB,Dop})}{\text{trace}(\mathbf{C}_{
 The improvement ratio over AoA-only is:
 
 $$R_{AoA} = \frac{\text{trace}(\mathbf{C}_{CRLB,AoA})}{\text{trace}(\mathbf{C}_{CRLB,combined})}$$
+
 
 ## Results
 
