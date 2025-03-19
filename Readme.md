@@ -101,18 +101,27 @@ where the update step $\delta \mathbf{x}_k$ is:
 ![Equation](Equations/equation_16_delta_mathbfx_k_le.png)
 
 with:
-- The combined Jacobian matrix:
+* The combined Jacobian matrix:
   
-  $$\mathbf{H}_{combined} = \begin{bmatrix} \mathbf{H}_{Dop} \\ \mathbf{H}_{AoA} \end{bmatrix}$$
+  $$\mathbf{H}_{combined} = \begin{bmatrix} 
+  \mathbf{H}_{Dop} \\
+  \mathbf{H}_{AoA}
+  \end{bmatrix}$$
 
-- The block-diagonal combined covariance:
+* The block-diagonal combined covariance:
   
-  $$\mathbf{C}_{combined} = \begin{bmatrix} \mathbf{C}_f & \mathbf{0} \\ \mathbf{0} & \mathbf{C}_\phi \end{bmatrix}$$
+  $$\mathbf{C}_{combined} = \begin{bmatrix} 
+  \mathbf{C}_f & \mathbf{0} \\
+  \mathbf{0} & \mathbf{C}_\phi
+  \end{bmatrix}$$
 
-- The residual vector:
+* The residual vector:
   
-  $$\mathbf{r}_{combined} = \begin{bmatrix} \tilde{\mathbf{f}} - \mathbf{f}(\mathbf{x}_k) \\ \tilde{\boldsymbol{\phi}} - \boldsymbol{\phi}(\mathbf{x}_k) \end{bmatrix}$$
-
+  $$\mathbf{r}_{combined} = \begin{bmatrix}
+  \tilde{\mathbf{f}} - \mathbf{f}(\mathbf{x}_k) \\
+  \tilde{\boldsymbol{\phi}} - \boldsymbol{\phi}(\mathbf{x}_k)
+  \end{bmatrix}$$
+  
 - $\lambda$ is the regularization parameter for numerical stability
 
 ## Cramer-Rao Lower Bound (CRLB) Analysis
