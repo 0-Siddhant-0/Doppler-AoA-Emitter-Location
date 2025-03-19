@@ -8,7 +8,7 @@ MATLAB implementation and analysis of Combined Doppler and Angle-of-Arrival (AoA
 
 The Doppler frequency shift measurement model is given by:
 
-$$f(t, \mathbf{x}) = f_c - \frac{f_c}{c} \frac{\mathbf{V}(t) \cdot (\mathbf{P}(t) - \mathbf{X})}{\|\mathbf{P}(t) - \mathbf{X}\|}$$
+![Equation](Equations/equation_0_f_t_mathbfx_f_c_.png)
 
 where:
 - $\mathbf{x} = [X, Y, Z, f_c]^T$ is the parameter vector
@@ -20,7 +20,7 @@ where:
 
 The observed Doppler measurements include additive noise:
 
-$$\tilde{f}(t_i, \mathbf{x}) = f(t_i, \mathbf{x}) + \nu(t_i)$$
+![Equation](Equations/equation_1_tildef_t_i_mathbfx_.png)
 
 where $\nu(t_i) \sim \mathcal{N}(0, \sigma_f^2)$ is Gaussian noise.
 
@@ -28,7 +28,7 @@ where $\nu(t_i) \sim \mathcal{N}(0, \sigma_f^2)$ is Gaussian noise.
 
 The AoA phase measurement model is given by:
 
-$$\phi(t_i) = \phi_0 - \frac{2\pi}{\lambda} \frac{\mathbf{L}(t_i) \cdot (\mathbf{P}(t_i) - \mathbf{X})}{\|\mathbf{P}(t_i) - \mathbf{X}\|}$$
+![Equation](Equations/equation_2_phi_t_i_phi_0_f.png)
 
 where:
 - $\phi_0$ is the phase offset
@@ -37,7 +37,7 @@ where:
 
 The noisy AoA measurements are modeled as:
 
-$$\tilde{\phi}(t_i) = \phi(t_i) + w_\phi(t_i)$$
+![Equation](Equations/equation_3_tildephi_t_i_phi_.png)
 
 where $w_\phi(t_i) \sim \mathcal{N}(0, \sigma_\phi^2)$.
 
@@ -51,13 +51,13 @@ $$\mathbf{H}_{Dop} = \begin{bmatrix} \frac{\partial f}{\partial X} & \frac{\part
 
 where:
 
-$$\frac{\partial f}{\partial X} = \frac{f_c}{c} \left( \frac{V_x \cdot r - \text{Ratio} \cdot (X_p - X)}{r^3} \right)$$
+![Equation](Equations/equation_5_fracpartial_fpartial.png)
 
-$$\frac{\partial f}{\partial Y} = \frac{f_c}{c} \left( \frac{V_y \cdot r - \text{Ratio} \cdot (Y_p - Y)}{r^3} \right)$$
+![Equation](Equations/equation_6_fracpartial_fpartial.png)
 
-$$\frac{\partial f}{\partial Z} = \frac{f_c}{c} \left( \frac{V_z \cdot r - \text{Ratio} \cdot (Z_p - Z)}{r^3} \right)$$
+![Equation](Equations/equation_7_fracpartial_fpartial.png)
 
-$$\frac{\partial f}{\partial f_c} = 1 - \frac{1}{c} \cdot \text{Ratio}$$
+![Equation](Equations/equation_8_fracpartial_fpartial.png)
 
 with:
 - $r = \|\mathbf{P} - \mathbf{X}\|$ is the range from platform to emitter
@@ -71,13 +71,13 @@ $$\mathbf{H}_{AoA} = \begin{bmatrix} \frac{\partial \phi}{\partial X} & \frac{\p
 
 where:
 
-$$\frac{\partial \phi}{\partial X} = \frac{2\pi}{\lambda} \left( \frac{L_x \cdot r - \text{Ratio}_{AoA} \cdot (X_p - X)}{r^3} \right)$$
+![Equation](Equations/equation_10_fracpartial_phiparti.png)
 
-$$\frac{\partial \phi}{\partial Y} = \frac{2\pi}{\lambda} \left( \frac{L_y \cdot r - \text{Ratio}_{AoA} \cdot (Y_p - Y)}{r^3} \right)$$
+![Equation](Equations/equation_11_fracpartial_phiparti.png)
 
-$$\frac{\partial \phi}{\partial Z} = \frac{2\pi}{\lambda} \left( \frac{L_z \cdot r - \text{Ratio}_{AoA} \cdot (Z_p - Z)}{r^3} \right)$$
+![Equation](Equations/equation_12_fracpartial_phiparti.png)
 
-$$\frac{\partial \phi}{\partial \phi_0} = 1$$
+![Equation](Equations/equation_13_fracpartial_phiparti.png)
 
 with:
 - $\text{Ratio}_{AoA} = \frac{\mathbf{L} \cdot (\mathbf{P} - \mathbf{X})}{r}$ is the projection of baseline vector onto the line-of-sight
@@ -86,10 +86,7 @@ with:
 
 The combined estimator minimizes the weighted sum of squared residuals:
 
-<!-- -->
-$$
-\hat{\mathbf{x}} = \arg\min_{\mathbf{x}} \left[ (\tilde{\mathbf{f}} - \mathbf{f}(\mathbf{x}))^T \mathbf{C}_f^{-1} (\tilde{\mathbf{f}} - \mathbf{f}(\mathbf{x})) + (\tilde{\boldsymbol{\phi}} - \boldsymbol{\phi}(\mathbf{x}))^T \mathbf{C}_\phi^{-1} (\tilde{\boldsymbol{\phi}} - \boldsymbol{\phi}(\mathbf{x})) \right]
-$$
+![Equation](Equations/equation_14_hatmathbfx_argmin_.png)
 
 where:
 - $\mathbf{C}_f = \sigma_f^2 \mathbf{I}$ is the Doppler measurement covariance matrix
@@ -97,36 +94,24 @@ where:
 
 This is solved iteratively using the Gauss-Newton method:
 
-$$\mathbf{x}_{k+1} = \mathbf{x}_k + \delta \mathbf{x}_k$$
+![Equation](Equations/equation_15_mathbfx_k_1_mathbf.png)
 
 where the update step $\delta \mathbf{x}_k$ is:
 
-<!-- -->
-$$
-\delta \mathbf{x}_k = \left( \mathbf{H}_{combined}^T \mathbf{C}_{combined}^{-1} \mathbf{H}_{combined} + \lambda \mathbf{I} \right)^{-1} \mathbf{H}_{combined}^T \mathbf{C}_{combined}^{-1} \mathbf{r}_{combined}
-$$
+![Equation](Equations/equation_16_delta_mathbfx_k_le.png)
 
 with:
 - The combined Jacobian matrix:
   
-  <!-- -->
-  $$
-  \mathbf{H}_{combined} = \begin{bmatrix} \mathbf{H}_{Dop} \\ \mathbf{H}_{AoA} \end{bmatrix}
-  $$
+  $$\mathbf{H}_{combined} = \begin{bmatrix} \mathbf{H}_{Dop} \\ \mathbf{H}_{AoA} \end{bmatrix}$$
 
 - The block-diagonal combined covariance:
   
-  <!-- -->
-  $$
-  \mathbf{C}_{combined} = \begin{bmatrix} \mathbf{C}_f & \mathbf{0} \\ \mathbf{0} & \mathbf{C}_\phi \end{bmatrix}
-  $$
+  $$\mathbf{C}_{combined} = \begin{bmatrix} \mathbf{C}_f & \mathbf{0} \\ \mathbf{0} & \mathbf{C}_\phi \end{bmatrix}$$
 
 - The residual vector:
   
-  <!-- -->
-  $$
-  \mathbf{r}_{combined} = \begin{bmatrix} \tilde{\mathbf{f}} - \mathbf{f}(\mathbf{x}_k) \\ \tilde{\boldsymbol{\phi}} - \boldsymbol{\phi}(\mathbf{x}_k) \end{bmatrix}
-  $$
+  $$\mathbf{r}_{combined} = \begin{bmatrix} \tilde{\mathbf{f}} - \mathbf{f}(\mathbf{x}_k) \\ \tilde{\boldsymbol{\phi}} - \boldsymbol{\phi}(\mathbf{x}_k) \end{bmatrix}$$
 
 - $\lambda$ is the regularization parameter for numerical stability
 
@@ -134,28 +119,25 @@ with:
 
 The CRLB provides the theoretical lower bound on the covariance matrix of any unbiased estimator:
 
-$$\mathbf{C}_{CRLB}(\mathbf{x}) = \mathbf{J}^{-1}$$
+![Equation](Equations/equation_20_mathbfC_CRLB_mathbfx.png)
 
 where $\mathbf{J}$ is the Fisher Information Matrix (FIM):
 
 ### Doppler-only FIM
 
-$$\mathbf{J}_{Dop} = \frac{1}{\sigma_f^2} \mathbf{H}_{Dop}^T \mathbf{H}_{Dop}$$
+![Equation](Equations/equation_21_mathbfJ_Dop_frac1s.png)
 
 ### AoA-only FIM
 
-$$\mathbf{J}_{AoA} = \frac{1}{\sigma_\phi^2} \mathbf{H}_{AoA}^T \mathbf{H}_{AoA}$$
+![Equation](Equations/equation_22_mathbfJ_AoA_frac1s.png)
 
 ### Combined FIM
 
-<!-- -->
-$$
-\mathbf{J}_{combined} = \mathbf{H}_{combined}^T \mathbf{C}_{combined}^{-1} \mathbf{H}_{combined}
-$$
+![Equation](Equations/equation_23_mathbfJ_combined_m.png)
 
 The CRLB trace is used as a scalar measure of estimation uncertainty:
 
-$$\text{CRLB}_{\text{trace}} = \text{trace}(\mathbf{C}_{CRLB}(\mathbf{x}))$$
+![Equation](Equations/equation_24_textCRLB_texttrace_.png)
 
 ## Platform Trajectory Model
 
@@ -163,7 +145,7 @@ The platform trajectory is generated using the weave model, which provides posit
 
 The turn angle is modeled as:
 
-$$\theta(t) = \theta_{max} \cdot \sin\left(\frac{v_{horiz} \cdot t}{r_{turn}}\right)$$
+![Equation](Equations/equation_25_theta_t_theta_max.png)
 
 where:
 - $\theta_{max}$ is the maximum turn angle (30 degrees)
@@ -173,11 +155,11 @@ where:
 
 The platform velocities are computed as:
 
-$$v_x = v_{horiz} \cdot \cos(\theta(t))$$
+![Equation](Equations/equation_26_v_x_v_horiz_cdot_c.png)
 
-$$v_y = -v_{horiz} \cdot \sin(\theta(t))$$
+![Equation](Equations/equation_27_v_y_v_horiz_cdot_.png)
 
-$$v_z = v_z + a_z \cdot \Delta t$$
+![Equation](Equations/equation_28_v_z_v_z_a_z_cdot.png)
 
 where $a_z$ alternates between positive and negative values to create vertical oscillation.
 
@@ -185,30 +167,29 @@ where $a_z$ alternates between positive and negative values to create vertical o
 
 The Monte Carlo simulation generates multiple realizations of noisy measurements and applies the estimator to each:
 
-$$\tilde{f}_i(t_j) = f(t_j, \mathbf{x}) + \nu_i(t_j), \quad \nu_i(t_j) \sim \mathcal{N}(0, \sigma_f^2)$$
+![Equation](Equations/equation_29_tildef_i_t_j_f_t_.png)
 
-$$\tilde{\phi}_i(t_j) = \phi(t_j, \mathbf{x}) + w_{\phi,i}(t_j), \quad w_{\phi,i}(t_j) \sim \mathcal{N}(0, \sigma_\phi^2)$$
+![Equation](Equations/equation_30_tildephi_i_t_j_ph.png)
 
 The RMS error is calculated as:
 
-$$\text{RMS}_x = \sqrt{\frac{1}{N_{MC}} \sum_{i=1}^{N_{MC}} (X_i - X_{true})^2}$$
+![Equation](Equations/equation_31_textRMS_x_sqrtfrac.png)
 
-$$\text{RMS}_y = \sqrt{\frac{1}{N_{MC}} \sum_{i=1}^{N_{MC}} (Y_i - Y_{true})^2}$$
+![Equation](Equations/equation_32_textRMS_y_sqrtfrac.png)
 
-$$\text{RMS}_z = \sqrt{\frac{1}{N_{MC}} \sum_{i=1}^{N_{MC}} (Z_i - Z_{true})^2}$$
+![Equation](Equations/equation_33_textRMS_z_sqrtfrac.png)
 
-$$\text{RMS}_{3D} = \sqrt{\text{RMS}_x^2 + \text{RMS}_y^2 + \text{RMS}_z^2}$$
+![Equation](Equations/equation_34_textRMS_3D_sqrttex.png)
 
 ## Improvement Ratio Calculation
 
 The improvement ratio of the combined method over Doppler-only is:
 
-$$R_{Dop} = \frac{\text{trace}(\mathbf{C}_{CRLB,Dop})}{\text{trace}(\mathbf{C}_{CRLB,combined})}$$
+![Equation](Equations/equation_35_R_Dop_fractexttrac.png)
 
 The improvement ratio over AoA-only is:
 
-$$R_{AoA} = \frac{\text{trace}(\mathbf{C}_{CRLB,AoA})}{\text{trace}(\mathbf{C}_{CRLB,combined})}$$
-
+![Equation](Equations/equation_36_R_AoA_fractexttrac.png)
 
 ## Results
 
@@ -285,3 +266,4 @@ $$R_{AoA} = \frac{\text{trace}(\mathbf{C}_{CRLB,AoA})}{\text{trace}(\mathbf{C}_{
 [10] E. J. Bailey, "Single platform geolocation of radio frequency emitters," Air Force Institute of Technology, 2015. [Online]. Available: https://scholar.afit.edu/etd/22
 
 [11] M. Fowler, "Analysis of single-platform passive emitter location with terrain data," IEEE Transactions on Aerospace and Electronic Systems, vol. 37, no. 2, pp. 495–507, 2001.
+
