@@ -208,9 +208,10 @@ The improvement ratio over AoA-only is:
 
 ### Trajectory Analysis
 
-![Platform Trajectories](Results/5.jpg)
-![Estimation Performance vs Trajectory](Results/6.jpg)
-![Improvement Ratio vs Trajectory](Results/7.jpg)
+![Platform Trajectories-3D](Results/10.jpg)
+![Platform Trajectories and their respective performance](Results/5.jpg)
+![Impact of Platform Trajectories on Estimation Performance](Results/6.jpg)
+![Improvement Ratio](Results/7.jpg)
 
 ### Measurement Quality Impact
 

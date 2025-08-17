@@ -32,27 +32,22 @@ colors = {'b', 'g', 'r'};
 for i = 1:length(g_values)
     g = g_values(i);
     
-    % generate platform trajectory
     [Px, Py, Pz, Vx, Vy, Vz, mu_vect] = weave(g, T, del_T, alt_kft, vel);
     t = 0:del_T:T;
     Plat_Nav_Data = [Px; Py; Pz; Vx; Vy; Vz; t];
     
-    % convert AoA standard deviation from degrees to radians
     aoa_std_dev_rad = aoa_std_dev * pi/180;
     
-    % get CRLB for each method
-    % 1. Doppler only
     [~, H_true_dop] = doppler_loc(dop_std_dev, Plat_Nav_Data, p_true, p_est_init);
     J_dop = (1/(dop_std_dev^2)) * (H_true_dop' * H_true_dop);
     CRLB_dop = inv(J_dop);
     crlb_traces(1, i) = trace(CRLB_dop(1:3, 1:3));
     crlb_matrices{1, i} = CRLB_dop;
     
-    % 2. AoA only
     p_true_aoa = p_true;
-    p_true_aoa(4) = 0;  % phase offset for AoA
+    p_true_aoa(4) = 0;
     p_est_init_aoa = p_est_init;
-    p_est_init_aoa(4) = 0;  % initial phase guess
+    p_est_init_aoa(4) = 0;
     
     [~, H_true_aoa] = LBI_loc(aoa_std_dev_rad, Plat_Nav_Data, mu_vect, p_true_aoa, p_est_init_aoa, fo, L);
     J_aoa = (1/(aoa_std_dev_rad^2)) * (H_true_aoa' * H_true_aoa);
@@ -60,7 +55,6 @@ for i = 1:length(g_values)
     crlb_traces(2, i) = trace(CRLB_aoa(1:3, 1:3));
     crlb_matrices{2, i} = CRLB_aoa;
     
-    % 3. combined
     [~, H_true_combined] = doppler_aoa_loc(dop_std_dev, aoa_std_dev_rad, Plat_Nav_Data, mu_vect, p_true, p_est_init, fo, L);
     C_dop = (dop_std_dev^2) * eye(length(Px));
     C_aoa = (aoa_std_dev_rad^2) * eye(length(Px));
@@ -70,27 +64,44 @@ for i = 1:length(g_values)
     crlb_traces(3, i) = trace(CRLB_combined(1:3, 1:3));
     crlb_matrices{3, i} = CRLB_combined;
     
-    % plot platform trajectory
-    subplot(2, 2, i);
+    subplot(4, 2, (i-1)*2 + 1);
     plot(Px, Py, 'k-', p_true(1), p_true(2), 'ro', 'MarkerSize', 8, 'LineWidth', 2);
     hold on;
+    ylabel(sprintf('Y Position (m)\n(g=%.1f)', g_values(i)));
+    grid on;
+    axis equal;
+    if i == 1
+        title('Full Trajectory');
+        legend('Platform Path', 'True Location', 'Location', 'NorthWest');
+    end
+    if i == length(g_values)
+        xlabel('X Position (m)');
+    end
     
-    % plot error ellipses for all methods
+    subplot(4, 2, (i-1)*2 + 2);
+    plot(p_true(1), p_true(2), 'ro', 'MarkerSize', 6, 'LineWidth', 1.5);
+    hold on;
+    
     for j = 1:3
         ellipse(crlb_matrices{j, i}(1:2, 1:2), 6, colors{j}, p_true(1:2));
     end
     
-    title(sprintf('g = %.1f g Turn', g_values(i)));
-    xlabel('X Position (m)');
-    ylabel('Y Position (m)');
-    if i == 1
-        legend('Platform Path', 'True Location', 'Doppler-only', 'AoA-only', 'Combined', 'Location', 'Best');
-    end
-    axis equal;
+    zoom_level = 15;
+    xlim([p_true(1) - zoom_level, p_true(1) + zoom_level]);
+    ylim([p_true(2) - zoom_level, p_true(2) + zoom_level]);
     grid on;
-    set(gcf, 'Renderer', 'painters');
-    drawnow;
+    axis equal;
+    
+    if i == 1
+        title('Zoomed CRLB Ellipses');
+        legend('True', 'Dop', 'AoA', 'Comb');
+    end
+    if i == length(g_values)
+        xlabel('X Position (m)');
+    end
 end
+set(gcf, 'Renderer', 'painters');
+drawnow;
 
 % plot CRLB trace comparison
 figure;
@@ -116,21 +127,7 @@ legend('Improvement over Doppler-only', 'Improvement over AoA-only');
 grid on;
 set(gcf, 'Renderer', 'painters');
 drawnow;
-%{
-% calculate improvement ratio
-improvement_over_doppler = crlb_traces(1, :) ./ crlb_traces(3, :);
-improvement_over_aoa = crlb_traces(2, :) ./ crlb_traces(3, :);
 
-figure;
-plot(g_values, improvement_over_doppler, 'b-o', g_values, improvement_over_aoa, 'g-o');
-title('Improvement Ratio of Combined Method over Individual Methods');
-xlabel('Platform Turn Rate (g)');
-ylabel('Improvement Ratio');
-legend('Improvement over Doppler-only', 'Improvement over AoA-only');
-grid on;
-set(gcf, 'Renderer', 'painters');
-drawnow;
-%}
 % display summary
 fprintf('Trajectory Analysis Summary:\n');
 fprintf('----------------------------\n');
