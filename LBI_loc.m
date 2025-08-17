@@ -55,8 +55,11 @@ phi_o = p_true(4);    %% rad
 %%%% Generate Perfect LBI Phase Measurements
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%R = sqrt((Px-xe).^2 + (Py-ye).^2 + (Pz-ze).^2);
+%phi_nf = phi_o - (2*pi/lambda)*(mu_vect(1,:).*(Px-xe) + mu_vect(2,:).*(Py-ye) + mu_vect(3,:).*(Pz-ze))./R;
 R = sqrt((Px-xe).^2 + (Py-ye).^2 + (Pz-ze).^2);
-phi_nf = phi_o - (2*pi/lambda)*(mu_vect(1,:).*(Px-xe) + mu_vect(2,:).*(Py-ye) + mu_vect(3,:).*(Pz-ze))./R;
+num = (L_scaled(1,:).*(Px-xe)) + (L_scaled(2,:).*(Py-ye)) + (L_scaled(3,:).*(Pz-ze));
+phi_nf = phi_o - (2*pi/lambda) * (num ./ R);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Make Noise-Corrupted LBI Measurements
@@ -89,9 +92,13 @@ for n = 1:N
     %%%%% Generate "Predicted" measurements based on Current Estimate:
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
-    R_hat = sqrt((Px-xe_hat).^2 + (Py-ye_hat).^2 + (Pz-ze_hat).^2);
-    phi_hat = phi_o_hat - (2*pi/lambda)*(mu_vect(1,:).*(Px-xe_hat) + mu_vect(2,:).*(Py-ye_hat) + mu_vect(3,:).*(Pz-ze_hat))./R_hat;
+    %R_hat = sqrt((Px-xe_hat).^2 + (Py-ye_hat).^2 + (Pz-ze_hat).^2);
+    %phi_hat = phi_o_hat - (2*pi/lambda)*(mu_vect(1,:).*(Px-xe_hat) + mu_vect(2,:).*(Py-ye_hat) + mu_vect(3,:).*(Pz-ze_hat))./R_hat;
     
+    R_hat = sqrt((Px-xe_hat).^2 + (Py-ye_hat).^2 + (Pz-ze_hat).^2);
+    num_hat = (L_scaled(1,:).*(Px-xe_hat)) + (L_scaled(2,:).*(Py-ye_hat)) + (L_scaled(3,:).*(Pz-ze_hat));
+    phi_hat = phi_o_hat - (2*pi/lambda) * (num_hat ./ R_hat);
+
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %%%% Generate the LS residual:
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

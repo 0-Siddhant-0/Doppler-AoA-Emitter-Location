@@ -107,6 +107,7 @@ view(45, 30);
 set(gcf, 'Renderer', 'painters');
 drawnow;
 
+
 % calculate improvement ratios
 figure;
 improvement_matrix = zeros(length(dop_std_dev_values), length(aoa_std_dev_values));
@@ -129,6 +130,8 @@ colorbar;
 view(45, 30);
 set(gcf, 'Renderer', 'painters');
 drawnow;
+
+
 
 % display summary
 fprintf('Measurement Quality Analysis Summary:\n');

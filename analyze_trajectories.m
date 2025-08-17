@@ -106,6 +106,20 @@ drawnow;
 % calculate improvement ratio
 improvement_over_doppler = crlb_traces(1, :) ./ crlb_traces(3, :);
 improvement_over_aoa = crlb_traces(2, :) ./ crlb_traces(3, :);
+figure;
+
+semilogy(g_values, improvement_over_doppler, 'b-o', g_values, improvement_over_aoa, 'g-o');
+title('Improvement Ratio of Combined Method (Log Scale)');
+xlabel('Platform Turn Rate (g)');
+ylabel('Improvement Ratio (Log Scale)');
+legend('Improvement over Doppler-only', 'Improvement over AoA-only');
+grid on;
+set(gcf, 'Renderer', 'painters');
+drawnow;
+%{
+% calculate improvement ratio
+improvement_over_doppler = crlb_traces(1, :) ./ crlb_traces(3, :);
+improvement_over_aoa = crlb_traces(2, :) ./ crlb_traces(3, :);
 
 figure;
 plot(g_values, improvement_over_doppler, 'b-o', g_values, improvement_over_aoa, 'g-o');
@@ -116,7 +130,7 @@ legend('Improvement over Doppler-only', 'Improvement over AoA-only');
 grid on;
 set(gcf, 'Renderer', 'painters');
 drawnow;
-
+%}
 % display summary
 fprintf('Trajectory Analysis Summary:\n');
 fprintf('----------------------------\n');

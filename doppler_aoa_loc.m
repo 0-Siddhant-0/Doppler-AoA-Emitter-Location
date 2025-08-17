@@ -65,8 +65,10 @@ f = f_nf + sqrt(var_dop)*randn(size(f_nf));
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Generate Perfect AoA Phase Measurements
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-phi_nf = 0 - (2*pi/lambda)*(mu_vect(1,:).*(Px-xe) + mu_vect(2,:).*(Py-ye) + mu_vect(3,:).*(Pz-ze))./R;
+%phi_nf = 0 - (2*pi/lambda)*(mu_vect(1,:).*(Px-xe) + mu_vect(2,:).*(Py-ye) + mu_vect(3,:).*(Pz-ze))./R;
 % Note: Using a phase offset of 0 
+num = (L_scaled(1,:).*(Px-xe)) + (L_scaled(2,:).*(Py-ye)) + (L_scaled(3,:).*(Pz-ze));
+phi_nf = 0 - (2*pi/lambda) * (num ./ R);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Make Noise-Corrupted AoA Measurements
@@ -101,8 +103,10 @@ for n = 1:N
     f_hat = fo_hat - (fo_hat/c)*(Vx.*(Px-xe_hat) + Vy.*(Py-ye_hat) + Vz.*(Pz-ze_hat))./R_hat;
     
     % AoA predictions
-    phi_hat = 0 - (2*pi/lambda)*(mu_vect(1,:).*(Px-xe_hat) + mu_vect(2,:).*(Py-ye_hat) + mu_vect(3,:).*(Pz-ze_hat))./R_hat;
-    
+    %phi_hat = 0 - (2*pi/lambda)*(mu_vect(1,:).*(Px-xe_hat) + mu_vect(2,:).*(Py-ye_hat) + mu_vect(3,:).*(Pz-ze_hat))./R_hat;
+    num_hat = (L_scaled(1,:).*(Px-xe_hat)) + (L_scaled(2,:).*(Py-ye_hat)) + (L_scaled(3,:).*(Pz-ze_hat));
+    phi_hat = 0 - (2*pi/lambda) * (num_hat ./ R_hat);
+
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %%%% Generate the LS residual:
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

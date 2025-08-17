@@ -220,9 +220,9 @@ The improvement ratio over AoA-only is:
 ## Key Findings
 
 1. **Position Estimation Accuracy**:
-   - Doppler-only: 3D RMS error = 9.17m
-   - AoA-only: 3D RMS error = 2.55m
-   - Combined: 3D RMS error = 2.30m
+   - Doppler-only: 3D RMS error = 9.18 m
+   - AoA-only: 3D RMS error = 1.29 m
+   - Combined: 3D RMS error = 1.05 m
 
 2. **CRLB Analysis**:
    - Doppler-only: $\text{trace}(\mathbf{C}_{CRLB,Dop}) = 8.47 \times 10^1$
